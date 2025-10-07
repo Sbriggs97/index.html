@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Crypto Quiz</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    .question { font-size: 1.2em; margin-bottom: 10px; }
+    .choices button { display: block; margin: 5px 0; padding: 10px; width: 100%; }
+    #feedback { margin-top: 10px; font-weight: bold; }
+    #next-btn { margin-top: 20px; display: none; }
+  </style>
+</head>
+<body>
+  <h1>Cryptography Practice Quiz</h1>
+  <div id="quiz-container">
+    <div class="question" id="question"></div>
+    <div class="choices" id="choices"></div>
+    <div id="feedback"></div>
+    <button id="next-btn">Next Question</button>
+  </div>
+
+  <script>
+    const quiz = [
+      {
+        question: "What is the process of turning ciphertext back into readable data?",
+        choices: ["Encoding", "Decryption", "Encryption", "Hashing"],
+        answer: 1
+      },
+      {
+        question: "Which cipher is considered unbreakable when used correctly?",
+        choices: ["Vigenère", "Caesar", "One-Time Pad", "Playfair"],
+        answer: 2
+      },
+      {
+        question: "Which encoding uses 8 bits per character?",
+        choices: ["UTF-16", "ASCII", "Base64", "Hex"],
+        answer: 1
+      },
+      {
+        question: "Which mode is the weakest for block encryption?",
+        choices: ["CBC", "ECB", "CFB", "CTR"],
+        answer: 1
+      }
+    ];
+
+    let currentQuestion = 0;
+
+    const questionEl = document.getElementById("question");
+    const choicesEl = document.getElementById("choices");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("next-btn");
+
+    function showQuestion() {
+      const q = quiz[currentQuestion];
+      questionEl.textContent = q.question;
+      choicesEl.innerHTML = "";
+      feedbackEl.textContent = "";
+      nextBtn.style.display = "none";
+
+      q.choices.forEach((choice, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = choice;
+        btn.onclick = () => checkAnswer(i);
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selected) {
+      const correct = quiz[currentQuestion].answer;
+      if (selected === correct) {
+        feedbackEl.textContent = "✅ Correct!";
+        feedbackEl.style.color = "green";
+      } else {
+        feedbackEl.textContent = `❌ Incorrect. The correct answer was: ${quiz[currentQuestion].choices[correct]}`;
+        feedbackEl.style.color = "red";
+      }
+      nextBtn.style.display = "block";
+    }
+
+    nextBtn.onclick = () => {
+      currentQuestion++;
+      if (currentQuestion < quiz.length) {
+        showQuestion();
+      } else {
+        questionEl.textContent = "🎉 Quiz Complete!";
+        choicesEl.innerHTML = "";
+        feedbackEl.textContent = "";
+        nextBtn.style.display = "none";
+      }
+    };
+
+    showQuestion();
+  </script>
+</body>
+</html>
