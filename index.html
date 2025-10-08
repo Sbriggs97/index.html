@@ -1,30 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Cryptography Quiz</title>
+  <meta charset="UTF-8" />
+  <title>Cryptography Quiz (60 Questions)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
-    .quiz-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 800px; margin: auto; }
-    h1 { text-align: center; }
-    .question { font-weight: bold; margin: 20px 0 10px; }
-    .options label { display: block; margin: 5px 0; cursor: pointer; }
-    .feedback { margin-top: 10px; font-weight: bold; }
-    #nextBtn { margin-top: 20px; padding: 10px 20px; cursor: pointer; }
-    #result { margin-top: 20px; font-size: 18px; font-weight: bold; }
-    .missed { margin-top: 20px; }
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --primary: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --border: #e5e7eb;
+    }
+    body {
+      margin: 0;
+      padding: 0 16px 48px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
+      background: var(--bg);
+      color: var(--text);
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0;
+    }
+    #status {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    .content {
+      padding: 24px;
+    }
+    .question-meta {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .question {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    label.option {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    label.option:hover {
+      border-color: var(--primary);
+      box-shadow: 0 2px 10px rgba(37,99,235,0.08);
+    }
+    input[type="checkbox"], input[type="radio"] {
+      margin-top: 3px;
+      transform: scale(1.15);
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .feedback {
+      min-height: 28px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .feedback.ok { color: var(--success); }
+    .feedback.bad { color: var(--danger); }
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    button {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.05s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    button.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .result {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .missed {
+      padding: 0 24px 24px;
+    }
+    .missed h3 {
+      margin: 10px 0 8px;
+    }
+    .missed-item {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 10px 0;
+    }
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 16px;
+      padding-bottom: 16px;
+    }
   </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <h1>Cryptography Quiz</h1>
-    <div id="quiz"></div>
-    <button id="nextBtn">Next Question</button>
-    <div id="result"></div>
-    <div class="missed"></div>
+  <div class="container">
+    <header>
+      <h1>Cryptography Quiz</h1>
+      <div id="status">Question 1 of 60 — 59 left</div>
+    </header>
+
+    <div class="content">
+      <div class="question-meta" id="meta">Select one</div>
+      <div class="question" id="question">Loading…</div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+
+      <div class="controls">
+        <button id="submitBtn" class="primary">Submit</button>
+        <button id="nextBtn" disabled>Next</button>
+      </div>
+    </div>
+
+    <div class="result" id="result" style="display:none;"></div>
+    <div class="missed" id="missed"></div>
   </div>
 
+  <footer>Tip: single-answer questions use radio buttons; multiple-answer questions use checkboxes.</footer>
+
   <script>
+    // ====== 60-Question Bank (from your notes) ======
     const questions = [
       {q:"Encryption is best defined as:",opts:["A) Converting ciphertext into plaintext","B) Converting plaintext into ciphertext","C) Encoding data for storage efficiency","D) Representing binary as ASCII"],ans:"B"},
       {q:"Which of the following should encryption protect?",opts:["A) Data at rest only","B) Data in transit only","C) Both data at rest and data in transit","D) Only plaintext messages"],ans:"C"},
@@ -88,64 +242,174 @@
       {q:"Which is the purpose of salting in encryption?",opts:["A) Makes ciphertext smaller","B) Adds randomness to prevent repeat ciphertexts","C) Replaces keys with IVs","D) Speeds up decryption"],ans:"B"}
     ];
 
+    // ====== State ======
     let current = 0;
     let score = 0;
-    let missed = [];
+    const missed = [];
 
-    // Shuffle
+    // Shuffle questions (random order each run)
     questions.sort(() => Math.random() - 0.5);
 
-    const quizDiv = document.getElementById("quiz");
-    const nextBtn = document.getElementById("nextBtn");
-    const resultDiv = document.getElementById("result");
-    const missedDiv = document.querySelector(".missed");
+    // DOM refs
+    const statusEl = document.getElementById('status');
+    const metaEl = document.getElementById('meta');
+    const qEl = document.getElementById('question');
+    const optsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const submitBtn = document.getElementById('submitBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultEl = document.getElementById('result');
+    const missedEl = document.getElementById('missed');
 
-    function loadQuestion() {
-      if (current >= questions.length) {
-        quizDiv.innerHTML = "";
-        nextBtn.style.display = "none";
-        resultDiv.innerHTML = `Quiz complete! You scored ${score}/${questions.length}`;
-        if (missed.length > 0) {
-          missedDiv.innerHTML = "<h3>Review of Missed Questions:</h3>";
-          missed.forEach(m => {
-            missedDiv.innerHTML += `<p><b>${m.q}</b><br>
-              Your answer: ${m.your}<br>
-              Correct answer: ${m.ans}</p>`;
-          });
-        } else {
-          missedDiv.innerHTML = "🎉 Perfect Score!";
-        }
+    function isMulti(ansString) {
+      return ansString.trim().length > 1;
+    }
+
+    function updateStatus() {
+      const total = questions.length;
+      const idx = current + 1;
+      const left = total - idx;
+      statusEl.textContent = `Question ${idx} of ${total} — ${left} left`;
+    }
+
+    function renderQuestion() {
+      // Clear feedback & buttons state
+      feedbackEl.textContent = '';
+      feedbackEl.className = 'feedback';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+      nextBtn.disabled = true;
+
+      // Update status
+      updateStatus();
+
+      // Load question
+      const q = questions[current];
+      qEl.textContent = q.q;
+
+      // Meta: single or select-all
+      const multi = isMulti(q.ans);
+      metaEl.textContent = multi ? 'Select all that apply' : 'Select one';
+
+      // Render inputs (radio for single; checkbox for multi)
+      const inputType = multi ? 'checkbox' : 'radio';
+      const groupName = 'option';
+      let html = '';
+      q.opts.forEach((opt) => {
+        const letter = opt.charAt(0); // "A", "B", "C", "D"
+        html += `
+          <label class="option">
+            <input type="${inputType}" name="${groupName}" value="${letter}">
+            <span>${opt}</span>
+          </label>`;
+      });
+      optsEl.innerHTML = html;
+    }
+
+    function getUserAnswer() {
+      const q = questions[current];
+      const multi = isMulti(q.ans);
+      const inputs = Array.from(document.querySelectorAll('input[name="option"]'));
+
+      if (multi) {
+        const selected = inputs.filter(i => i.checked).map(i => i.value);
+        if (selected.length === 0) return ''; // nothing chosen
+        // Sort letters so order doesn't matter
+        return selected.sort().join('');
+      } else {
+        const chosen = inputs.find(i => i.checked);
+        return chosen ? chosen.value : '';
+      }
+    }
+
+    function normalizeAnswer(ansString) {
+      return ansString.split('').sort().join('');
+    }
+
+    function lockInputs() {
+      document.querySelectorAll('input[name="option"]').forEach(i => i.disabled = true);
+    }
+
+    function unlockInputs() {
+      document.querySelectorAll('input[name="option"]').forEach(i => i.disabled = false);
+    }
+
+    // Submit handler (grade current question)
+    submitBtn.addEventListener('click', () => {
+      const q = questions[current];
+      const user = getUserAnswer();
+
+      if (!user) {
+        feedbackEl.textContent = 'Please select an answer.';
+        feedbackEl.className = 'feedback';
         return;
       }
 
-      const q = questions[current];
-      quizDiv.innerHTML = `<div class="question">${q.q}</div>`;
-      let optionsHTML = "";
-      q.opts.forEach(opt => {
-        optionsHTML += `<label><input type="checkbox" name="option" value="${opt.charAt(0)}"> ${opt}</label>`;
-      });
-      quizDiv.innerHTML += `<div class="options">${optionsHTML}</div><div class="feedback"></div>`;
-    }
+      // Compare normalized (order-independent for multi)
+      const correct = normalizeAnswer(q.ans);
+      const given = normalizeAnswer(user);
 
-    nextBtn.addEventListener("click", () => {
-      const selected = Array.from(document.querySelectorAll("input[name=option]:checked"))
-        .map(cb => cb.value).join("");
-      const correct = questions[current].ans;
-
-      const feedback = document.querySelector(".feedback");
-      if (selected === correct) {
-        feedback.textContent = "✅ Correct!";
+      if (given === correct) {
         score++;
+        feedbackEl.textContent = '✅ Correct!';
+        feedbackEl.className = 'feedback ok';
       } else {
-        feedback.textContent = `❌ Incorrect! Correct: ${correct}`;
-        missed.push({q: questions[current].q, ans: correct, your: selected || "None"});
+        feedbackEl.textContent = `❌ Incorrect! Correct: ${q.ans}`;
+        feedbackEl.className = 'feedback bad';
+        missed.push({ q: q.q, correct: q.ans, your: user });
       }
 
-      current++;
-      setTimeout(loadQuestion, 1000);
+      // Lock current, switch button states
+      lockInputs();
+      submitBtn.disabled = true;
+      nextBtn.disabled = false;
     });
 
-    loadQuestion();
+    // Next handler (advance or finish)
+    nextBtn.addEventListener('click', () => {
+      current++;
+      if (current >= questions.length) {
+        // Show results
+        showResults();
+      } else {
+        renderQuestion();
+      }
+    });
+
+    function showResults() {
+      // Hide question UI
+      document.querySelector('.content').style.display = 'none';
+
+      // Show final score
+      resultEl.style.display = 'block';
+      resultEl.textContent = `Quiz complete! You scored ${score}/${questions.length}`;
+
+      // Missed review
+      missedEl.innerHTML = '';
+      if (missed.length > 0) {
+        const title = document.createElement('h3');
+        title.textContent = 'Review of Missed Questions:';
+        missedEl.appendChild(title);
+
+        missed.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'missed-item';
+          div.innerHTML = `
+            <div><strong>${item.q}</strong></div>
+            <div class="muted">Your answer: ${item.your || 'None selected'}</div>
+            <div class="muted">Correct answer: ${item.correct}</div>
+          `;
+          missedEl.appendChild(div);
+        });
+      } else {
+        const p = document.createElement('p');
+        p.textContent = '🎉 Perfect Score! Well done!';
+        missedEl.appendChild(p);
+      }
+    }
+
+    // Initial render
+    renderQuestion();
   </script>
 </body>
 </html>
